@@ -14,7 +14,7 @@ uint16_t labyrinthMatrix[LABYRINTH_HEIGHT][LABYRINTH_WIDTH] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},
     {1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1},
-    {1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1},
+    {1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1},
     {1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1},
     {1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1},
     {0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -136,6 +136,20 @@ uint16_t pacmanMatrixMovements_Up[PACMAN_SIZE][PACMAN_SIZE] = {
 	{0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
 };
 
+
+uint16_t pillMatrix[PACMAN_SIZE][PACMAN_SIZE]  = {
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+	{0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	{0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
+	{0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
+	{0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	{0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+};
+
 void PacmanRotate(Position *pos, Direction newDir){
 	switch(newDir){
 		case UP:
@@ -165,7 +179,7 @@ void PacmanMove(Position *pos, Direction dir){
 	
 		int x,y;
 			
-			//Clear
+		//Clear
 		for(y=0; y<10; y++){
 			for(x=0; x<10; x++){
 				if ((*pacmanMovMatrix)[y][x] == 2){
@@ -204,3 +218,78 @@ void PacmanMove(Position *pos, Direction dir){
 		}
 	}
 }
+
+int16_t coordX, coordY, xx, yy;
+int16_t PacmanCheckWallCollision(Position *pos, Direction dir, int16_t changeDir){
+	
+	//Check position is a finite square position in order to be allowed to change direction, otw always collision
+	if (((pos->yPos-25) % 10 != 0 || (pos->xPos-5) % 10 != 0) && changeDir == 1) return 1;
+	
+	xx = pos->xPos;
+	yy = pos->yPos;
+	
+	
+	coordY = (pos->yPos-25 + PACMAN_SIZE - 1)/PACMAN_SIZE;
+	coordX = (pos->xPos-5 + PACMAN_SIZE - 1)/PACMAN_SIZE;
+	
+	switch (dir) {
+			  case UP: 
+					if ((pos->yPos-25) % 10 == 0) coordY--;
+					break;
+		  	case LEFT:
+					if ((pos->xPos-5) % 10 == 0) coordX--;
+					break;
+				case DOWN:
+					if ((pos->yPos-25) % 10 == 0) coordY++;
+					break;
+				case RIGHT:
+					if ((pos->xPos-5) % 10 == 0) coordX++;
+					break;
+				default:
+					break;
+			}
+	if (pos->yPos % 5 == 0 || pos->xPos % 5 == 0){
+		if (labyrinthMatrix[coordY][coordX] == 1){
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+int zeros[LABYRINTH_HEIGHT * LABYRINTH_WIDTH];  // Array to store the indices of cells with 0
+    
+void generatePills(){
+		int zero_count = 0;
+		int i,j,k;
+    // Collect indices of all zeros
+    for (i = 0; i < LABYRINTH_HEIGHT; i++) {
+        for (j = 0; j < LABYRINTH_WIDTH; j++) {
+            if (labyrinthMatrix[i][j] == 0) {
+                zeros[zero_count++] = i * LABYRINTH_WIDTH + j;  // Store index in 1D form
+            }
+        }
+    }
+		
+		for (i = zero_count - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int temp = zeros[i];
+        zeros[i] = zeros[j];
+        zeros[j] = temp;
+    }
+		
+		for (k = 0; k < NUM_POWER_PILLS; k++) {
+        int index = zeros[k];
+        int row = index / LABYRINTH_WIDTH;
+        int col = index % LABYRINTH_WIDTH;
+        labyrinthMatrix[row][col] = 3;
+    }
+		
+		for (k = NUM_POWER_PILLS; k < NUM_STANDARD_PILLS + NUM_POWER_PILLS; k++) {
+			  int index = zeros[k];
+        int row = index / LABYRINTH_WIDTH;
+        int col = index % LABYRINTH_WIDTH;
+        labyrinthMatrix[row][col] = 2;
+    }
+}
+

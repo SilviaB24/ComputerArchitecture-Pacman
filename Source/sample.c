@@ -43,7 +43,7 @@ int main(void)
   SystemInit();  												/* System Initialization (i.e., PLL)  */
 	
   LCD_Initialization();
-	
+	//srand(time(NULL));  // Seed the random number generator
   TP_Init();
 	//TouchPanel_Calibrate();
 	
@@ -52,16 +52,18 @@ int main(void)
 	GUI_Text(0, 0, (uint8_t *) "Game over in", White, Black);
 	GUI_Text(200, 0, (uint8_t *) "SCORE", White, Black);
 	
-	pacmanPos.xPos = 100;
-	pacmanPos.yPos = 100;
-  //LCD_DrawLabyrinth(5, 25, Blue, 10);
+	generatePills();
+	
+	pacmanPos.xPos = 15;
+	pacmanPos.yPos = 35;
+  LCD_DrawLabyrinth(5, 25, Blue, 10);
 	pacmanDir = NONE;
 	pacmanMatrix = &pacmanMatrix_Left;
 	pacmanMovMatrix = &pacmanMatrixMovements_Left;
   LCD_DrawPacman(pacmanPos, Yellow, *pacmanMatrix);
 	
 	joystick_init();											/* Joystick Initialization            */
-	init_RIT(0x004C4B40);									/* RIT Initialization 75 msec  = 7500000/100000000     */
+	init_RIT(0x002C4B40);									/* RIT Initialization 75 msec  = 7500000/100000000     */
 	enable_RIT();	
 	
 	//init_timer(0, 0x1312D0 ); 						/* 50ms * 25MHz = 1.25*10^6 = 0x1312D0 */

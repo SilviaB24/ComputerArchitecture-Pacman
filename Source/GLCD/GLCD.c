@@ -699,10 +699,23 @@ void LCD_DrawPacman(Position pos, uint16_t color, uint16_t matrix[PACMAN_SIZE][P
 		for(x=0; x<10; x++){
 			if (matrix[y][x] == 1)
 				LCD_SetPoint(x + pos.xPos, y + pos.yPos, color);
+			else
+				LCD_SetPoint(x + pos.xPos, y + pos.yPos, Black);
 		}
 	}
 }
 
+void LCD_DrawPowerPill(uint16_t xPos, uint16_t yPos, uint16_t color, uint16_t matrix[PACMAN_SIZE][PACMAN_SIZE]){
+	int x, y;
+	for(y=0; y<10; y++){
+		for(x=0; x<10; x++){
+			if (matrix[y][x] == 1)
+				LCD_SetPoint(x + xPos, y + yPos, color);
+			else
+				LCD_SetPoint(x + xPos, y + yPos, Black);
+		}
+	}
+}
 
 void LCD_DrawLabyrinth(uint16_t x0, uint16_t y0, uint16_t color, uint16_t width ){
 	int x, y;
@@ -710,6 +723,10 @@ void LCD_DrawLabyrinth(uint16_t x0, uint16_t y0, uint16_t color, uint16_t width 
 		for(x=0; x<LABYRINTH_WIDTH; x++){
 			if (labyrinthMatrix[y][x] == 1)
 				LCD_SetFilledSquare(x*width + x0, y*width + y0, color, width);
+			if (labyrinthMatrix[y][x] == 2)
+				LCD_SetFilledSquare(x*width + x0 + 4, y*width + y0 + 4, White, 2);
+			if (labyrinthMatrix[y][x] == 3)
+				LCD_DrawPowerPill(x*width + x0, y*width + y0, White, pillMatrix);
 		}
 	}
 }

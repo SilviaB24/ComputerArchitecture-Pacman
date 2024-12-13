@@ -118,7 +118,8 @@ extern uint16_t pacmanMatrix_Up[PACMAN_SIZE][PACMAN_SIZE];
 extern uint16_t pacmanMatrixMovements_Down[PACMAN_SIZE][PACMAN_SIZE];
 extern uint16_t pacmanMatrix_Down[PACMAN_SIZE][PACMAN_SIZE];
 
-	
+extern uint16_t pillMatrix[PACMAN_SIZE][PACMAN_SIZE];
+
 void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, uint16_t bkColor );
 void GUI_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_t bkColor);
 
