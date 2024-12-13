@@ -136,17 +136,27 @@ uint16_t pacmanMatrixMovements_Up[PACMAN_SIZE][PACMAN_SIZE] = {
 	{0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
 };
 
-void PacmanRotate(Position *pos, Direction newDir, Direction oldDir){
-	int x,y;
-	for(y=0; y<10; y++){
-			for(x=0; x<10; x++){
-				if (pacmanMatrixMovements_Left[y][x] == 2){
-					
-					LCD_SetPoint(pos->xPos + x, pos->yPos + y, Black);
-				}
-			}
+void PacmanRotate(Position *pos, Direction newDir){
+	switch(newDir){
+		case UP:
+				pacmanMatrix = &pacmanMatrix_Up;
+				pacmanMovMatrix = &pacmanMatrixMovements_Up;
+				break;
+			case DOWN:
+				pacmanMatrix = &pacmanMatrix_Down;
+				pacmanMovMatrix = &pacmanMatrixMovements_Down;
+				break;
+			case RIGHT:
+				pacmanMatrix = &pacmanMatrix_Right;
+				pacmanMovMatrix = &pacmanMatrixMovements_Right;
+				break;
+			default:
+				pacmanMatrix = &pacmanMatrix_Left;
+				pacmanMovMatrix = &pacmanMatrixMovements_Left;
+				break;
 	}
-
+	
+  LCD_DrawPacman(pacmanPos, Yellow, *pacmanMatrix);
 }
 
 void PacmanMove(Position *pos, Direction dir){
@@ -158,7 +168,7 @@ void PacmanMove(Position *pos, Direction dir){
 			//Clear
 		for(y=0; y<10; y++){
 			for(x=0; x<10; x++){
-				if (pacmanMatrix[y][x] == 2){
+				if ((*pacmanMovMatrix)[y][x] == 2){
 					LCD_SetPoint(pos->xPos + x, pos->yPos + y, Black);
 				}
 			}
@@ -187,7 +197,7 @@ void PacmanMove(Position *pos, Direction dir){
 		//Draw
 		for(y=0; y<10; y++){
 			for(x=0; x<10; x++){
-				if (pacmanMatrix[y][x] == 1){
+				if ((*pacmanMovMatrix)[y][x] == 1){
 					LCD_SetPoint(pos->xPos + x, pos->yPos + y, Yellow);
 				}
 			}

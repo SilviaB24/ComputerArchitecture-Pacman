@@ -33,8 +33,10 @@
 extern uint8_t ScaleFlag; // <- ScaleFlag needs to visible in order for the emulator to find the symbol (can be placed also inside system_LPC17xx.h but since it is RO, it needs more work)
 #endif
 
-Position PacmanPos;
-Direction PacmanDir;
+Position pacmanPos;
+Direction pacmanDir;
+uint16_t (*pacmanMatrix)[PACMAN_SIZE][PACMAN_SIZE];
+uint16_t (*pacmanMovMatrix)[PACMAN_SIZE][PACMAN_SIZE];
 
 int main(void)
 {
@@ -50,11 +52,13 @@ int main(void)
 	GUI_Text(0, 0, (uint8_t *) "Game over in", White, Black);
 	GUI_Text(200, 0, (uint8_t *) "SCORE", White, Black);
 	
-	PacmanPos.xPos = 100;
-	PacmanPos.yPos = 100;
+	pacmanPos.xPos = 100;
+	pacmanPos.yPos = 100;
   //LCD_DrawLabyrinth(5, 25, Blue, 10);
-  LCD_DrawPacman(PacmanPos, Yellow, pacmanMatrixMovements_Left);
-	PacmanDir = NONE;
+	pacmanDir = NONE;
+	pacmanMatrix = &pacmanMatrix_Left;
+	pacmanMovMatrix = &pacmanMatrixMovements_Left;
+  LCD_DrawPacman(pacmanPos, Yellow, *pacmanMatrix);
 	
 	joystick_init();											/* Joystick Initialization            */
 	init_RIT(0x004C4B40);									/* RIT Initialization 75 msec  = 7500000/100000000     */

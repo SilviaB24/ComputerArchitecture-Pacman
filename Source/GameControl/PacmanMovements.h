@@ -39,13 +39,15 @@ extern uint16_t pacmanMatrix_Up[PACMAN_SIZE][PACMAN_SIZE];
 extern uint16_t pacmanMatrixMovements_Down[PACMAN_SIZE][PACMAN_SIZE];
 extern uint16_t pacmanMatrix_Down[PACMAN_SIZE][PACMAN_SIZE];
 
-extern uint16_t pacmanMatrix[PACMAN_SIZE][PACMAN_SIZE];
+extern uint16_t (*pacmanMatrix)[PACMAN_SIZE][PACMAN_SIZE];
+extern uint16_t (*pacmanMovMatrix)[PACMAN_SIZE][PACMAN_SIZE];
 extern Position pacmanPos;
 extern Direction pacmanDir;
+
 /* Private function prototypes -----------------------------------------------*/
 void PacmanMove(Position *pos, Direction dir);
 	
-void PacmanRotate(Position *pos, Direction newDir, Direction oldDir);
+void PacmanRotate(Position *pos, Direction newDir);
 #endif 
 
 /*********************************************************************************************************

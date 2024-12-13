@@ -24,15 +24,28 @@
 extern unsigned char currState;  // Declare variables defined in main.c
 extern unsigned char taps;
 extern int outputBit;
-extern Position PacmanPos;
-extern Direction PacmanDir;
+extern Position pacmanPos;
+extern Direction pacmanDir;
 
 void RIT_IRQHandler (void)
 {			
 	static int up=0, lx=0, dw=0, rx=0;
 	static int position=0;	
-	static Direction oldDirection = NONE;
-	Direction newDirection;
+	Direction newDirection = pacmanDir;
+	
+	if((LPC_GPIO1->FIOPIN & (1<<26)) == 0){	
+		/* Joytick DOWN pressed */
+		dw++;
+		switch(dw){
+			case 1:
+				newDirection = DOWN;
+			default:
+				break;
+		}
+	}
+	else{
+			dw=0;
+	}
 	
 	if((LPC_GPIO1->FIOPIN & (1<<27)) == 0){	
 		/* Joytick LEFT pressed */
@@ -40,10 +53,6 @@ void RIT_IRQHandler (void)
 		switch(lx){
 			case 1:
 				newDirection = LEFT;
-				if (newDirection != PacmanDir){
-					// pacman rotation
-					PacmanDir = newDirection;
-				}
 			default:
 				break;
 		}
@@ -52,16 +61,26 @@ void RIT_IRQHandler (void)
 			lx=0;
 	}
 	
+	if((LPC_GPIO1->FIOPIN & (1<<28)) == 0){	
+		/* Joytick RIGHT pressed */
+		rx++;
+		switch(rx){
+			case 1:
+				newDirection = RIGHT;
+			default:
+				break;
+		}
+	}
+	else{
+			rx=0;
+	}
+	
 	if((LPC_GPIO1->FIOPIN & (1<<29)) == 0){	
 		/* Joytick UP pressed */
 		up++;
 		switch(up){
 			case 1:
 				newDirection = UP;
-				if (newDirection != PacmanDir){
-					PacmanRotate(&PacmanPos, newDirection, PacmanDir);
-					PacmanDir = newDirection;
-				}
 			default:
 				break;
 		}
@@ -70,7 +89,12 @@ void RIT_IRQHandler (void)
 			up=0;
 	}
 	
-	PacmanMove(&PacmanPos, PacmanDir);
+	
+	if (newDirection != pacmanDir){
+			PacmanRotate(&pacmanPos, newDirection);
+			pacmanDir = newDirection;
+	}
+	PacmanMove(&pacmanPos, pacmanDir);
 	
 	reset_RIT();
   LPC_RIT->RICTRL |= 0x1;	/* clear interrupt flag */
