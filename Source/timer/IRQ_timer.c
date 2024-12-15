@@ -13,6 +13,7 @@
 #include "../GLCD/GLCD.h" 
 #include "../TouchPanel/TouchPanel.h"
 #include <stdio.h> /*for sprintf*/
+#include "GameControl//PacmanMovements.h"
 
 /******************************************************************************
 ** Function name:		Timer0_IRQHandler
@@ -24,39 +25,22 @@
 **
 ******************************************************************************/
 
+extern Direction newDirection;
+
 void TIMER0_IRQHandler (void)
 {
-	static int clear = 0;
-	char time_in_char[5] = "";
-	int mosse[6][2]={{1,1},{-1,-1},{1,0},{-1,0},{0,1},{0,-1}};
-	int i=0;
-	
-  if(getDisplayPoint(&display, Read_Ads7846(), &matrix )){
-		if(display.y < 280){
-			for(i=0;i<6;i++)
-				TP_DrawPoint(display.x+mosse[i][0],display.y+mosse[i][1]);
-			TP_DrawPoint(display.x,display.y);
-			GUI_Text(200, 0, (uint8_t *) "     ", Blue, Blue);
-			clear = 0;
-		}
-		else{			
-			if(display.y <= 0x13E){			
-				clear++;
-				if(clear%20 == 0){
-					sprintf(time_in_char,"%4d",clear/20);
-					GUI_Text(200, 0, (uint8_t *) time_in_char, White, Blue);
-					if(clear == 200){	/* 1 seconds = 200 times * 500 us*/
-						LCD_Clear(Black);
-						GUI_Text(0, 280, (uint8_t *) " touch here : 1 sec to clear ", Blue, White);			
-						clear = 0;
-					}
-				}
+	if (newDirection != NONE){
+		if (!PacmanCheckWallCollision(&pacmanPos, newDirection, 1)){
+			if (newDirection != pacmanDir){
+				PacmanRotate(&pacmanPos, newDirection);
+				pacmanDir = newDirection;
 			}
+			PacmanMove(&pacmanPos, pacmanDir);
+		} else if (!PacmanCheckWallCollision(&pacmanPos, pacmanDir, 0)){
+			PacmanMove(&pacmanPos, pacmanDir);
 		}
 	}
-	else{
-		//do nothing if touch returns values out of bounds
-	}
+	
   LPC_TIM0->IR = 1;			/* clear interrupt flag */
   return;
 }

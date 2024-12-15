@@ -62,16 +62,18 @@ int main(void)
 	pacmanMovMatrix = &pacmanMatrixMovements_Left;
   LCD_DrawPacman(pacmanPos, Yellow, *pacmanMatrix);
 	
-	joystick_init();											/* Joystick Initialization            */
-	init_RIT(0x002C4B40);									/* RIT Initialization 75 msec  = 7500000/100000000     */
+	joystick_init();											/* Joystick Initialization       */
+	init_RIT(0x004C4B40);									/* RIT Initialization 50 msec = 50ms * 100MHz    */
 	enable_RIT();	
 	
+	//TIMER 0: PACMAN SPEED
 	//init_timer(0, 0x1312D0 ); 						/* 50ms * 25MHz = 1.25*10^6 = 0x1312D0 */
+	init_timer(0, 0x98968 ); 						/* 25ms * 25MHz = 0.625*10^6 = 98968 */
 	//init_timer(0, 0x6108 ); 						  /* 1ms * 25MHz = 25*10^3 = 0x6108 */
 	//init_timer(0, 0x4E2 ); 						    /* 500us * 25MHz = 1.25*10^3 = 0x4E2 */
 	//init_timer(0, 0xC8 ); 						    /* 8us * 25MHz = 200 ~= 0xC8 */
 	
-	//enable_timer(0);
+	enable_timer(0);
 	
 	LPC_SC->PCON |= 0x1;									/* power-down	mode										*/
 	LPC_SC->PCON &= ~(0x2);						

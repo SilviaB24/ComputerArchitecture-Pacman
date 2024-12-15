@@ -26,12 +26,13 @@ extern unsigned char taps;
 extern int outputBit;
 extern Position pacmanPos;
 extern Direction pacmanDir;
+Direction newDirection = NONE;
 
 void RIT_IRQHandler (void)
 {			
 	static int up=0, lx=0, dw=0, rx=0;
 	static int position=0;	
-	static Direction newDirection = NONE;
+	
 	
 	if((LPC_GPIO1->FIOPIN & (1<<26)) == 0){	
 		/* Joytick DOWN pressed */
@@ -89,17 +90,7 @@ void RIT_IRQHandler (void)
 			up=0;
 	}
 	
-	if (newDirection != NONE){
-		if (!PacmanCheckWallCollision(&pacmanPos, newDirection, 1)){
-			if (newDirection != pacmanDir){
-				PacmanRotate(&pacmanPos, newDirection);
-				pacmanDir = newDirection;
-			}
-			PacmanMove(&pacmanPos, pacmanDir);
-		} else if (!PacmanCheckWallCollision(&pacmanPos, pacmanDir, 0)){
-			PacmanMove(&pacmanPos, pacmanDir);
-		}
-	}
+	
 	
 	reset_RIT();
   LPC_RIT->RICTRL |= 0x1;	/* clear interrupt flag */

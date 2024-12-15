@@ -7,6 +7,9 @@
 ** Correlated files:    lib_timer.c, funct_timer.c, IRQ_timer.c
 **--------------------------------------------------------------------------------------------------------
 *********************************************************************************************************/
+
+#include "GameControl//PacmanMovements.h"
+
 #ifndef __TIMER_H
 #define __TIMER_H
 
@@ -19,6 +22,7 @@ extern void reset_timer( uint8_t timer_num );
 extern void TIMER0_IRQHandler (void);
 extern void TIMER1_IRQHandler (void);
 
+extern Direction newDirection;
 #endif /* end __TIMER_H */
 /*****************************************************************************
 **                            End Of File
