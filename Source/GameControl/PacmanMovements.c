@@ -276,8 +276,8 @@ int zeros[LABYRINTH_HEIGHT * LABYRINTH_WIDTH];  // Array to store the indices of
 
 void endGame(){
 	  disable_timer(0);
-		//disable_timer(1);
-		//disable_timer(2);
+		disable_timer(1);
+		disable_timer(2);
 		disable_RIT();
 		
 		LCD_SetFilledRect(0, 135, White, 240, 50);
@@ -329,14 +329,8 @@ void generatePills(){
         zeros[j] = temp;
     }
 		
-		for (k = 0; k < NUM_POWER_PILLS; k++) {
-        int index = zeros[k];
-        int row = index / LABYRINTH_WIDTH;
-        int col = index % LABYRINTH_WIDTH;
-        labyrinthMatrix[row][col] = 3;
-    }
 		
-		for (k = NUM_POWER_PILLS; k < NUM_STANDARD_PILLS + NUM_POWER_PILLS; k++) {
+		for (k = 0; k < NUM_STANDARD_PILLS; k++) {
 			  int index = zeros[k];
         int row = index / LABYRINTH_WIDTH;
         int col = index % LABYRINTH_WIDTH;
