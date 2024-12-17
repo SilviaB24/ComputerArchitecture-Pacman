@@ -516,6 +516,16 @@ void LCD_SetFilledSquare(uint16_t Xpos,uint16_t Ypos,uint16_t point,uint16_t wid
 	}
 }
 
+
+
+void LCD_SetFilledRect(uint16_t Xpos,uint16_t Ypos,uint16_t point,uint16_t width, uint16_t height){
+	int x=0, y=0;
+	for(x=0; x< width; x++){
+		for(y=0; y< height; y++){
+			LCD_SetPoint(Xpos+x,Ypos+y,point);
+		}
+	}
+}
 /******************************************************************************
 * Function Name  : LCD_DrawLine
 * Description    : Bresenham's line algorithm
@@ -705,6 +715,7 @@ void LCD_DrawPacman(Position pos, uint16_t color, uint16_t matrix[PACMAN_SIZE][P
 	}
 }
 
+
 void LCD_DrawPowerPill(uint16_t xPos, uint16_t yPos, uint16_t color, uint16_t matrix[PACMAN_SIZE][PACMAN_SIZE]){
 	int x, y;
 	for(y=0; y<10; y++){
@@ -717,18 +728,47 @@ void LCD_DrawPowerPill(uint16_t xPos, uint16_t yPos, uint16_t color, uint16_t ma
 	}
 }
 
-void LCD_DrawLabyrinth(uint16_t x0, uint16_t y0, uint16_t color, uint16_t width ){
+
+void LCD_DrawLabyrinth(uint16_t x0, uint16_t y0, uint16_t color, uint16_t width, uint16_t startRow, uint16_t endRow){
 	int x, y;
-	for(y=0; y<LABYRINTH_HEIGHT; y++){
+	for(y=startRow; y<=endRow; y++){
 		for(x=0; x<LABYRINTH_WIDTH; x++){
+			if (labyrinthMatrix[y][x] == 0)
+				LCD_SetFilledSquare(x*width + x0, y*width + y0, Black, width);
 			if (labyrinthMatrix[y][x] == 1)
 				LCD_SetFilledSquare(x*width + x0, y*width + y0, color, width);
-			if (labyrinthMatrix[y][x] == 2)
+			if (labyrinthMatrix[y][x] == 2){
+				LCD_SetFilledSquare(x*width + x0, y*width + y0, Black, width);
 				LCD_SetFilledSquare(x*width + x0 + 4, y*width + y0 + 4, White, 2);
-			if (labyrinthMatrix[y][x] == 3)
-				LCD_DrawPowerPill(x*width + x0, y*width + y0, White, pillMatrix);
+			}
 		}
 	}
+}
+
+
+void LCD_UpdateScore(uint16_t score){
+	char score_Str[20];
+	sprintf(score_Str, "SCORE: %04d", score);
+	GUI_Text(145, 0, (uint8_t *) score_Str, White, Black);
+}
+
+
+void LCD_UpdateCountDown(uint16_t countdown){
+	char countdown_Str[20];
+	sprintf(countdown_Str, "TIME: %03ds", countdown);
+	GUI_Text(5, 0, (uint8_t *) countdown_Str, White, Black);
+}
+
+
+void LCD_AddLive(Position *pos){
+	LCD_DrawPacman(*pos, Yellow, pacmanMatrix_Left);
+	pos->xPos += (3*PACMAN_SIZE/2);
+}
+
+
+void LCD_RemoveLive(Position *pos){
+	pos->xPos -= (5*PACMAN_SIZE/2);
+	LCD_SetFilledSquare(pos->xPos, pos->yPos, Black, PACMAN_SIZE);
 }
 /******************************************************************************
 * Function Name  : PutChar

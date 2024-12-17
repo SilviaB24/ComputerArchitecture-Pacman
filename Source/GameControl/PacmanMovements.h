@@ -22,8 +22,13 @@ typedef struct {
 #define LABYRINTH_HEIGHT 27
 #define PACMAN_SIZE 10
 
+#define White          0xFFFF
 #define Black          0x0000
 #define Yellow         0xFFE0
+#define Red            0xF800
+#define Green          0x07E0
+#define Blue           0x001F
+
 #define NUM_STANDARD_PILLS 240
 #define NUM_POWER_PILLS 6
 
@@ -46,6 +51,11 @@ extern uint16_t (*pacmanMovMatrix)[PACMAN_SIZE][PACMAN_SIZE];
 extern Position pacmanPos;
 extern Direction pacmanDir;
 
+
+extern uint16_t PacmanScore;
+extern uint16_t RemainingPills;
+extern uint16_t PacmanLives;
+extern Position livesPos;
 
 extern uint16_t pillMatrix[PACMAN_SIZE][PACMAN_SIZE];
 

@@ -665,6 +665,26 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>button_EXINT</GroupName>
+          <Files>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Source\button_EXINT\button.h</FilePath>
+            </File>
+            <File>
+              <FileName>IRQ_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\button_EXINT\IRQ_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>lib_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\button_EXINT\lib_button.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
@@ -1273,6 +1293,26 @@
               <FileName>lib_joystick.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Source\joystick\lib_joystick.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>button_EXINT</GroupName>
+          <Files>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Source\button_EXINT\button.h</FilePath>
+            </File>
+            <File>
+              <FileName>IRQ_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\button_EXINT\IRQ_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>lib_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\button_EXINT\lib_button.c</FilePath>
             </File>
           </Files>
         </Group>

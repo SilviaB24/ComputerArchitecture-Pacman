@@ -23,6 +23,8 @@ extern void TIMER0_IRQHandler (void);
 extern void TIMER1_IRQHandler (void);
 
 extern Direction newDirection;
+extern uint16_t CountdownTime;
+
 #endif /* end __TIMER_H */
 /*****************************************************************************
 **                            End Of File

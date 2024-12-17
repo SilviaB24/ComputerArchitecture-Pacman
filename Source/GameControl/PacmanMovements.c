@@ -150,6 +150,16 @@ uint16_t pillMatrix[PACMAN_SIZE][PACMAN_SIZE]  = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
+void PacmanAddLive(){
+	PacmanLives++;
+	LCD_AddLive(&livesPos);
+}
+
+void PacmanRemoveLive(){
+	PacmanLives--;
+	LCD_RemoveLive(&livesPos);
+}
+
 void PacmanRotate(Position *pos, Direction newDir){
 	switch(newDir){
 		case UP:
@@ -172,6 +182,7 @@ void PacmanRotate(Position *pos, Direction newDir){
 	
   LCD_DrawPacman(pacmanPos, Yellow, *pacmanMatrix);
 }
+
 
 void PacmanMove(Position *pos, Direction dir){
 	
@@ -219,7 +230,9 @@ void PacmanMove(Position *pos, Direction dir){
 	}
 }
 
+
 int16_t coordX, coordY, xx, yy;
+
 int16_t PacmanCheckWallCollision(Position *pos, Direction dir, int16_t changeDir){
 	
 	//Check position is a finite square position in order to be allowed to change direction, otw always collision
@@ -257,8 +270,46 @@ int16_t PacmanCheckWallCollision(Position *pos, Direction dir, int16_t changeDir
 }
 
 
+
 int zeros[LABYRINTH_HEIGHT * LABYRINTH_WIDTH];  // Array to store the indices of cells with 0
     
+
+void endGame(){
+	  disable_timer(0);
+		//disable_timer(1);
+		//disable_timer(2);
+		disable_RIT();
+		
+		LCD_SetFilledRect(0, 135, White, 240, 50);
+		LCD_SetFilledRect(5, 140, Black, 230, 40);
+		
+		if(RemainingPills != 0) GUI_Text(80, 155, (uint8_t *) "Game Over!", Red, Black);
+		else GUI_Text(88, 155, (uint8_t *) "Victory!", Green, Black);
+}
+	
+void PacmanCheckPillCollision(Position pos){
+ 	coordY = (pos.yPos-25 + PACMAN_SIZE - 1)/PACMAN_SIZE;
+	coordX = (pos.xPos-5 + PACMAN_SIZE - 1)/PACMAN_SIZE;
+	
+	if ((pos.yPos-25) % PACMAN_SIZE == 0 && (pos.xPos-5) % PACMAN_SIZE == 0){
+		if(labyrinthMatrix[coordY][coordX] == 2 || labyrinthMatrix[coordY][coordX] == 3) {
+			
+			if (labyrinthMatrix[coordY][coordX] == 2) PacmanScore += 10;
+			else PacmanScore += 50;
+			
+			labyrinthMatrix[coordY][coordX] = 0;
+			
+			if ((PacmanScore / 1000) + 1  > PacmanLives){
+				PacmanAddLive();
+			}
+			
+			LCD_UpdateScore(PacmanScore);
+			
+			RemainingPills--;
+			if(RemainingPills == 0) endGame();
+		}
+	}
+}
 void generatePills(){
 		int zero_count = 0;
 		int i,j,k;

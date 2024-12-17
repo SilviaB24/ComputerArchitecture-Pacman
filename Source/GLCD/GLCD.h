@@ -26,6 +26,8 @@
 #include "LPC17xx.h"
 #include "GameControl/PacmanMovements.h"
 
+#include <stdio.h>
+
 /* Private define ------------------------------------------------------------*/
 
 /* LCD Interface */
@@ -93,6 +95,7 @@ void LCD_Clear(uint16_t Color);
 uint16_t LCD_GetPoint(uint16_t Xpos,uint16_t Ypos);
 void LCD_SetPoint(uint16_t Xpos,uint16_t Ypos,uint16_t point);
 void LCD_SetFilledSquare(uint16_t Xpos,uint16_t Ypos,uint16_t point,uint16_t width);
+void LCD_SetFilledRect(uint16_t Xpos,uint16_t Ypos,uint16_t point,uint16_t width, uint16_t height);
 void LCD_DrawLine( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 , uint16_t color );
 void LCD_DrawLineWithWidth( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 , uint16_t color, uint16_t width );
 
@@ -100,9 +103,12 @@ void LCD_DrawLineWithWidth( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 ,
 #define LABYRINTH_HEIGHT 27
 #define PACMAN_SIZE 10
 
-void LCD_DrawLabyrinth(uint16_t x0, uint16_t y0, uint16_t color, uint16_t width );
+void LCD_DrawLabyrinth(uint16_t x0, uint16_t y0, uint16_t color, uint16_t width, uint16_t startRow, uint16_t endRow);
 void LCD_DrawPacman(Position pos, uint16_t color, uint16_t matrix[PACMAN_SIZE][PACMAN_SIZE]);
-
+void LCD_UpdateScore(uint16_t score);
+void LCD_UpdateCountDown(uint16_t countdown);
+void LCD_AddLive(Position *pos);
+void LCD_RemoveLive(Position *pos);
 
 extern uint16_t labyrinthMatrix[LABYRINTH_HEIGHT][LABYRINTH_WIDTH];
 
